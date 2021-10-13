@@ -13,6 +13,6 @@ public class Main {
         // Word c = t.mod(a);
         // System.out.println(c.getNumber());
         Interpreter i = new Interpreter();
-        i.getInput();
+        i.Execute();
     }
 }

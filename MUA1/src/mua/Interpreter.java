@@ -1,15 +1,17 @@
 package src.mua;
 
 import java.util.*;
+import java.util.regex.*;
 
 public class Interpreter {
     private String cmd; 
-    private Scanner scan = new Scanner(System.in);
+    private Scanner scanOu = new Scanner(System.in);
+    private Scanner scanIn;
     private HashMap<String, Word> DMem = new HashMap<>();
 
     public Word getInput() {
         cmd = "";
-        cmd = scan.next();
+        cmd = scanIn.next();
         if(cmd != null) {
             return parse(cmd);
         }
@@ -30,11 +32,18 @@ public class Interpreter {
             tmp.assign(cmd.substring(1), 0);
             return tmp;
         }
-        else if(cmd.equals("read")) {
-            Scanner ReadScan = new Scanner(scan.nextLine());
+        //如果是数字
+        if(IsNumber(cmd)) {
             Word tmp = new Word();
-            tmp.assign(scan.nextLine(), 0);
-            scan = ReadScan;
+            tmp.assign(cmd, 1);
+            return tmp;
+        }
+        else if(cmd.equals("read")) {
+            Scanner ReadScan = scanIn;
+            scanIn = new Scanner(scanOu.nextLine());
+            Word tmp = new Word();
+            tmp.assign(scanIn.nextLine(), 0);
+            scanIn = ReadScan;
             return tmp;
         }
         else if(cmd.equals("thing")) {
@@ -46,31 +55,31 @@ public class Interpreter {
             return DMem.get(name);
         }
         else if(cmd.equals("add")) {
-            Float res = DMem.get(getInput().getString()).getNumber() + DMem.get(getInput().getString()).getNumber();
+            Float res = getInput().getNumber() + getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("sub")) {
-            Float res = DMem.get(getInput().getString()).getNumber() - DMem.get(getInput().getString()).getNumber();
+            Float res = getInput().getNumber() - getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("mul")) {
-            Float res = DMem.get(getInput().getString()).getNumber() * DMem.get(getInput().getString()).getNumber();
+            Float res = getInput().getNumber() * getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("div")) {
-            Float res = DMem.get(getInput().getString()).getNumber() / DMem.get(getInput().getString()).getNumber();
+            Float res = getInput().getNumber() / getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("mod")) {
-            Float res = DMem.get(getInput().getString()).getNumber() % DMem.get(getInput().getString()).getNumber();
+            Float res = getInput().getNumber() % getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
@@ -81,9 +90,11 @@ public class Interpreter {
             return tmp;
         }
         else if(cmd.equals("make")) {
-            String name = getInput().getString().substring(1);
+            String name = getInput().getString();
+            //System.out.println(name);
             Word tmp = getInput();
             DMem.put(name, tmp);
+            //System.out.println(DMem.get(name).getString());
             return tmp;
         }
         else {
@@ -92,6 +103,18 @@ public class Interpreter {
     }
 
     public void Execute() {
-        
+        while(scanOu.hasNextLine()) {
+            scanIn = new Scanner(scanOu.nextLine());
+            getInput();
+        }
+    }
+
+    public Boolean IsNumber(String str) {
+        Pattern pattern = Pattern.compile("-?[0-9]+(\\.[0-9]+)?");
+        Matcher isNum = pattern.matcher(str);
+        if (!isNum.matches()) {
+            return false;
+        }
+        return true;
     }
 } 
