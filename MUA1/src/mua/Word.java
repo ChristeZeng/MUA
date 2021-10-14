@@ -24,29 +24,4 @@ public class Word {
     public void print() {
         System.out.println(value);
     }
-
-    /*运算符*/
-    public Word add(Word oparetor) {
-        Word res = new Word();
-        res.value = Float.toString(oparetor.getNumber() + getNumber());
-        return res;
-    }
-    
-    public Word mul(Word oparetor) {
-        Word res = new Word();
-        res.value = Float.toString(oparetor.getNumber() * getNumber());
-        return res;
-    }
-
-    public Word div(Word oparetor) {
-        Word res = new Word();
-        res.value = Float.toString(getNumber() / oparetor.getNumber());
-        return res;
-    }
-
-    public Word mod(Word oparetor) {
-        Word res = new Word();
-        res.value = Float.toString(getNumber() % oparetor.getNumber());
-        return res;
-    }
 }
