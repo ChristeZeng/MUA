@@ -6,7 +6,7 @@ public class Word {
 
     //构造函数暂空
     public Word() {
-
+        
     }
     public void assign(String value, int Type) {
         this.value = value;

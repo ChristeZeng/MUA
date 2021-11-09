@@ -2,7 +2,7 @@ package src.mua;
 
 public class Word {
     private String value;
-    private int Type;
+    private int Type
 
     //构造函数暂空
     public Word() {
