@@ -1,2 +1,40 @@
-class java.lang.NumberFormatException
-0
+ not gt: PASS
+ isname: PASS
+ read: PASS
+ eq: PASS
+ earse: PASS
+ isname: PASS
+ earse: PASS
+ gt: PASS
+ gt: PASS
+ lt: PASS
+ eq: PASS
+ eq: PASS
+ and: PASS
+ or: PASS
+ not: PASS
+ or not: PASS
+ run: PASS
+ run again: PASS
+ run : PASS
+ after run : PASS
+ if: PASS
+ if: PASS
+ isnumber: PASS
+ isnumber: PASS
+ isnumber: PASS
+ isword: PASS
+ isword: PASS
+ islist: PASS
+ islist: PASS
+ run: PASS
+ lisbool: PASS
+ isempty: PASS
+ isempty: PASS
+ isempty: PASS
+function: PASS
+function without parameters: PASS
+recursive: PASS
+local/global: PASS
+export: PASS
+42

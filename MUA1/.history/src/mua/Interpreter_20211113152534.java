@@ -483,9 +483,9 @@ public class Interpreter {
     }
 
     public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
-        ArrayList<String> ret = new ArrayList<>();
+        ArrayList<String> ret = new ArrayList<String>();
         for(int i = 0; i < src.size(); i++) {
-            ret.add(src.get(i));
+            ret.set(i, src.get(i));
         }
         return ret;
     }

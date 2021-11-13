@@ -185,7 +185,7 @@ public class Interpreter {
                     tmp = getInput();
                 }
 
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                RestoreFromArrayList(TmpcmdList, cmdList);
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
@@ -201,7 +201,7 @@ public class Interpreter {
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                RestoreFromArrayList(TmpcmdList, cmdList);
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
@@ -330,10 +330,9 @@ public class Interpreter {
         }
         else if(cmd.equals("run")) {
             ArrayList<String> TmpcmdList = new ArrayList<>();
-            ArrayList<String> runList = getInput().getList();
-
             DeepCopy(cmdList, TmpcmdList);
-            cmdList = runList;
+
+            cmdList = getInput().getList();
             int TempArgsNumber = ArgsNumber;
             ArgsNumber = 0;
             Word tmp = new Word();
@@ -341,7 +340,7 @@ public class Interpreter {
                 tmp = getInput();
             }
             
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            RestoreFromArrayList(TmpcmdList, cmdList);
             ArgsNumber = TempArgsNumber;
             return tmp;
         }
@@ -389,7 +388,7 @@ public class Interpreter {
             
             Scope = "";
 
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            RestoreFromArrayList(TmpcmdList, cmdList);
             ArgsNumber = TmpArgsNumber;
             return tmp;
         }
@@ -482,11 +481,9 @@ public class Interpreter {
         }
     }
 
-    public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
-        ArrayList<String> ret = new ArrayList<>();
+    public void RestoreFromArrayList(ArrayList<String> src, ArrayList<String> dest) {
         for(int i = 0; i < src.size(); i++) {
-            ret.add(src.get(i));
+            dest.set(i, src.get(i));
         }
-        return ret;
     }
 } 

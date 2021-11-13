@@ -175,7 +175,7 @@ public class Interpreter {
                 //Word gabige = getInput(); //获取列表1
                 ArrayList<String> ifList = getInput().getList();
                 ArrayList<String> TmpcmdList = new ArrayList<String>();
-                DeepCopy(cmdList, TmpcmdList);
+                DeepCopy(cmdList, TmpcmdList);;
                 
                 int TmpArgsNumber = ArgsNumber;
                 cmdList = ifList;
@@ -184,16 +184,15 @@ public class Interpreter {
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                
+                RestoreFromArrayList(TmpcmdList, cmdList);
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
             else
             {
                 ArrayList<String> ifList = getInput().getList();
-                ArrayList<String> TmpcmdList = new ArrayList<String>();
-                DeepCopy(cmdList, TmpcmdList);
+                ArrayList<String> TmpcmdList = cmdList;
                 int TmpArgsNumber = ArgsNumber;
                 cmdList = ifList;
                 ArgsNumber = 0;
@@ -201,7 +200,7 @@ public class Interpreter {
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                cmdList = TmpcmdList;
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
@@ -329,11 +328,8 @@ public class Interpreter {
             return tmp;
         }
         else if(cmd.equals("run")) {
-            ArrayList<String> TmpcmdList = new ArrayList<>();
-            ArrayList<String> runList = getInput().getList();
-
-            DeepCopy(cmdList, TmpcmdList);
-            cmdList = runList;
+            ArrayList<String> tmplist = cmdList;
+            cmdList = getInput().getList();
             int TempArgsNumber = ArgsNumber;
             ArgsNumber = 0;
             Word tmp = new Word();
@@ -341,7 +337,7 @@ public class Interpreter {
                 tmp = getInput();
             }
             
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            cmdList = tmplist;
             ArgsNumber = TempArgsNumber;
             return tmp;
         }
@@ -389,7 +385,7 @@ public class Interpreter {
             
             Scope = "";
 
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            RestoreFromArrayList(TmpcmdList, cmdList);
             ArgsNumber = TmpArgsNumber;
             return tmp;
         }
@@ -482,11 +478,9 @@ public class Interpreter {
         }
     }
 
-    public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
-        ArrayList<String> ret = new ArrayList<>();
+    public void RestoreFromArrayList(ArrayList<String> src, ArrayList<String> dest) {
         for(int i = 0; i < src.size(); i++) {
-            ret.add(src.get(i));
+            dest.set(i, src.get(i));
         }
-        return ret;
     }
 } 

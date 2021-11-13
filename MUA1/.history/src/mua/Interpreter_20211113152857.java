@@ -483,6 +483,7 @@ public class Interpreter {
     }
 
     public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
+        System.out.println(src.size());
         ArrayList<String> ret = new ArrayList<>();
         for(int i = 0; i < src.size(); i++) {
             ret.add(src.get(i));

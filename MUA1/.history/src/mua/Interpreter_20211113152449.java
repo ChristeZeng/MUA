@@ -185,7 +185,7 @@ public class Interpreter {
                     tmp = getInput();
                 }
 
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                RestoreFromArrayList(TmpcmdList, cmdList);
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
@@ -201,7 +201,7 @@ public class Interpreter {
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-                cmdList = RestoreFromArrayList(TmpcmdList);
+                RestoreFromArrayList(TmpcmdList, cmdList);
                 ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
@@ -341,7 +341,7 @@ public class Interpreter {
                 tmp = getInput();
             }
             
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            RestoreFromArrayList(TmpcmdList, cmdList);
             ArgsNumber = TempArgsNumber;
             return tmp;
         }
@@ -483,9 +483,9 @@ public class Interpreter {
     }
 
     public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
-        ArrayList<String> ret = new ArrayList<>();
+        ArrayList<String> ret = new ArrayList<String>();
         for(int i = 0; i < src.size(); i++) {
-            ret.add(src.get(i));
+            ret.set(i, src.get(i));
         }
         return ret;
     }

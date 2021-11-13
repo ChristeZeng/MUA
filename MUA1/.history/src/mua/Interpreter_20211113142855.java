@@ -10,7 +10,7 @@ public class Interpreter {
     private Scanner scanIn;
     private HashMap<String, Word> DMem = new HashMap<>();
     private HashMap<String, Word> OpMem = new HashMap<>();
-    private ArrayList<String> cmdList = new ArrayList<>();
+    private List<String> cmdList = new ArrayList<>();
     private int ArgsNumber = 0;
     private String Scope = "";
     // private List<String> TmpcmdList;
@@ -159,50 +159,36 @@ public class Interpreter {
         }
         else if(cmd.equals("if")) {
             if(!getInput().getBoolean()) {
-                int LeftBracket = 0;
-                int RightBracket = 0;
-                for(; ArgsNumber < cmdList.size(); ArgsNumber++) {
-                    if(cmdList.get(ArgsNumber).equals("["))
-                        LeftBracket++;
-                    else if(cmdList.get(ArgsNumber).equals("]")) {
-                        RightBracket++;
-                    }
-                    if(LeftBracket - RightBracket == 0) {
-                        ArgsNumber++;
-                        break;
-                    }
-                }
-                //Word gabige = getInput(); //获取列表1
-                ArrayList<String> ifList = getInput().getList();
-                ArrayList<String> TmpcmdList = new ArrayList<String>();
-                DeepCopy(cmdList, TmpcmdList);
-                
-                int TmpArgsNumber = ArgsNumber;
-                cmdList = ifList;
+                // int LeftBracket = 0;
+                // int RightBracket = 0;
+                // for(; ArgsNumber < cmdList.size(); ArgsNumber++) {
+                //     if(cmdList.get(ArgsNumber).equals("["))
+                //         LeftBracket++;
+                //     else if(cmdList.get(ArgsNumber).equals("]")) {
+                //         RightBracket++;
+                //     }
+                //     if(LeftBracket - RightBracket == 0) {
+                //         ArgsNumber++;
+                //         break;
+                //     }
+                // }
+                Word gabige = getInput(); //获取列表1
+                cmdList = getInput().getList();
                 ArgsNumber = 0;
                 Word tmp = new Word();
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-
-                cmdList = RestoreFromArrayList(TmpcmdList);
-                ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
             else
             {
-                ArrayList<String> ifList = getInput().getList();
-                ArrayList<String> TmpcmdList = new ArrayList<String>();
-                DeepCopy(cmdList, TmpcmdList);
-                int TmpArgsNumber = ArgsNumber;
-                cmdList = ifList;
+                cmdList = getInput().getList();
                 ArgsNumber = 0;
                 Word tmp = new Word();
                 while(ArgsNumber < cmdList.size()) {
                     tmp = getInput();
                 }
-                cmdList = RestoreFromArrayList(TmpcmdList);
-                ArgsNumber = TmpArgsNumber;
                 return tmp;
             }
         }
@@ -329,11 +315,8 @@ public class Interpreter {
             return tmp;
         }
         else if(cmd.equals("run")) {
-            ArrayList<String> TmpcmdList = new ArrayList<>();
-            ArrayList<String> runList = getInput().getList();
-
-            DeepCopy(cmdList, TmpcmdList);
-            cmdList = runList;
+            List<String> tmplist = cmdList;
+            cmdList = getInput().getList();
             int TempArgsNumber = ArgsNumber;
             ArgsNumber = 0;
             Word tmp = new Word();
@@ -341,7 +324,7 @@ public class Interpreter {
                 tmp = getInput();
             }
             
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            cmdList = tmplist;
             ArgsNumber = TempArgsNumber;
             return tmp;
         }
@@ -371,9 +354,8 @@ public class Interpreter {
             //Debug print
             //System.out.println("Debug");
             //System.out.println(OpMem.get(cmd).LoaclVar.get("Hello").getString());
-            ArrayList<String> TmpcmdList = new ArrayList<String>();
-            DeepCopy(cmdList, TmpcmdList);
-            int TmpArgsNumber = ArgsNumber;
+            TmpcmdList = cmdList;
+            TmpArgsNumber = ArgsNumber;
 
             getLine(OpMem.get(cmd).getOpString());
             //delete the first element of cmdList
@@ -389,7 +371,7 @@ public class Interpreter {
             
             Scope = "";
 
-            cmdList = RestoreFromArrayList(TmpcmdList);
+            cmdList = TmpcmdList;
             ArgsNumber = TmpArgsNumber;
             return tmp;
         }
@@ -474,19 +456,5 @@ public class Interpreter {
             return false;
         }
         return true;
-    }
-
-    public void DeepCopy(ArrayList<String> src, ArrayList<String> dest) {
-        for(String str : src) {
-            dest.add(str);
-        }
-    }
-
-    public ArrayList<String> RestoreFromArrayList(ArrayList<String> src) {
-        ArrayList<String> ret = new ArrayList<>();
-        for(int i = 0; i < src.size(); i++) {
-            ret.add(src.get(i));
-        }
-        return ret;
     }
 } 

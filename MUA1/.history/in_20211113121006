@@ -85,35 +85,3 @@ make "let [
 ]
 let "a 6
 print :a
-make "a 1
-make "repeat [
-    [n s]
-    [
-		if eq :n 0 
-			[] 
-			[run :s repeat sub :n 1 :s]
-	]
-]
-repeat 4 [make "a add :a 1]
-print :a
-make "n 5
-make "factorial [
-	[n]
-	[
-		if lt :n 2
-			[return 1]
-			[return mul :n factorial sub :n 1]
-	]
-]
-print factorial :n
-print :n
-make "gcd [
-    [a b]
-    [
-        if eq :b 0
-            [return :a]
-            [return gcd :b mod :a :b]
-    ]
-]
-print gcd 18 14
-print gcd 18 13
