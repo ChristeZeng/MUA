@@ -37,4 +37,9 @@ function without parameters: PASS
 recursive: PASS
 local/global: PASS
 export: PASS
-42
+recursive/local: PASS
+factorial: PASS
+factorial/local: PASS
+gcd 18 14: PASS
+gcd 18 13: PASS
+50
