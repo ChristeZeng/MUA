@@ -512,6 +512,8 @@ public class Interpreter {
             //从String中还原函数的参数列表和执行命令列表
             ArrayList<String> FuncStringsList = SplitLineBySpace(Func.getString());
             
+            ArrayList<Integer> TmpScope = new ArrayList<>();
+            DeepCopyInt(Scope, TmpScope);
             //set the scope
             HashMap<String, Word> NewScope = new HashMap<>();
 
@@ -564,8 +566,6 @@ public class Interpreter {
             }
             
             //嵌套定义的Scope被改变
-            ArrayList<Integer> TmpScope = new ArrayList<>();
-            DeepCopyInt(Scope, TmpScope);
             ScopeFunc.add(NewScope);
             Scope.add(ScopeFunc.size() - 1);
 

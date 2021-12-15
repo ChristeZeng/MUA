@@ -121,23 +121,3 @@ make "f2 [
     [return add :x 1]
 ]
 print f1 f2 42
-
-make "fact_nice [
-    [rec]
-    [
-        make "g [
-            [x]
-            [
-                if eq :x 0
-                [return 1]
-                [
-                    make "tmp rec :rec
-                    return mul :x tmp sub :x 1
-                ]
-            ]
-        ]
-        return :g
-    ]
-]
-make "fact_curry fact_nice :fact_nice
-print fact_curry 2

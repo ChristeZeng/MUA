@@ -13,7 +13,6 @@ public class Interpreter {
     private int ArgsNumber = 0;
     // 当前作用域
     private ArrayList<Integer> Scope = new ArrayList<>();
-    private ArrayList<Integer> LScope = new ArrayList<>();
 
     public void getLine(String cmdLine) {
         //clear the cmdList
@@ -154,56 +153,37 @@ public class Interpreter {
         else if(cmd.equals("thing")) {
             String name = getInput().getString();
             //返回当前作用域中的变量
-            // for(int i = Scope.size() - 1; i >= 0; i--) {
-            //     if(ScopeFunc.get(Scope.get(i)).containsKey(name)) {
-            //         return ScopeFunc.get(Scope.get(i)).get(name);
-            //     }
-            // }
+            for(int i = Scope.size() - 1; i >= 0; i--) {
+                if(ScopeFunc.get(Scope.get(i)).containsKey(name)) {
+                    return ScopeFunc.get(Scope.get(i)).get(name);
+                }
+            }
             
-            //返回当前作用域中的变量
-            if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey(name)) {
-                return ScopeFunc.get(Scope.get(Scope.size() - 1)).get(name);
-            }
-            else {
-                for(int i = LScope.size() - 1; i >= 0; i--) {
-                    if(ScopeFunc.get(LScope.get(i)).containsKey(name)) {
-                        return ScopeFunc.get(LScope.get(i)).get(name);
-                    }
-                }
-                for(int i = Scope.size() - 1; i >= 0; i--) {
-                    if(ScopeFunc.get(Scope.get(i)).containsKey(name)) {
-                        return ScopeFunc.get(Scope.get(i)).get(name);
-                    }
-                }
-                if(ScopeFunc.get(0).containsKey(name)) {
-                    return ScopeFunc.get(0).get(name);
-                }
-            }
-
             //如果没有返回NULL
             Word tmp = new Word();
             tmp.assign("", 4);
             return tmp;
+            /*
+            //返回当前作用域中的变量
+            if(ScopeFunc.get(ScopeFunc.size() - 1).containsKey(name)) {
+                return ScopeFunc.get(ScopeFunc.size() - 1).get(name);
+            }
+            //如果没有返回定义函数的作用域中的参数
+            else if(ScopeFunc.size() > 2 && ScopeFunc.get(ScopeFunc.size() - 2).containsKey(name)) {
+                return ScopeFunc.get(ScopeFunc.size() - 2).get(name);
+            }
+            //如果当前作用域中没有，则返回全局变量
+            else {
+                return ScopeFunc.get(0).get(name);
+            }
+            */
         }
         else if(cmd.charAt(0) == ':') {
             String name = cmd.substring(1);
             //返回当前作用域中的变量
-            if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey(name)) {
-                return ScopeFunc.get(Scope.get(Scope.size() - 1)).get(name);
-            }
-            else {
-                for(int i = LScope.size() - 1; i >= 0; i--) {
-                    if(ScopeFunc.get(LScope.get(i)).containsKey(name)) {
-                        return ScopeFunc.get(LScope.get(i)).get(name);
-                    }
-                }
-                for(int i = Scope.size() - 1; i >= 0; i--) {
-                    if(ScopeFunc.get(Scope.get(i)).containsKey(name)) {
-                        return ScopeFunc.get(Scope.get(i)).get(name);
-                    }
-                }
-                if(ScopeFunc.get(0).containsKey(name)) {
-                    return ScopeFunc.get(0).get(name);
+            for(int i = Scope.size() - 1; i >= 0; i--) {
+                if(ScopeFunc.get(Scope.get(i)).containsKey(name)) {
+                    return ScopeFunc.get(Scope.get(i)).get(name);
                 }
             }
             
@@ -211,6 +191,25 @@ public class Interpreter {
             Word tmp = new Word();
             tmp.assign("", 4);
             return tmp;
+
+            /*
+            //返回当前作用域中的变量
+            if(ScopeFunc.get(ScopeFunc.size() - 1).containsKey(name)) {
+                return ScopeFunc.get(ScopeFunc.size() - 1).get(name);
+            }
+            //如果没有返回定义函数的作用域中的参数
+            // else if(ScopeFunc.size() > 2 && ScopeFunc.get(ScopeFunc.size() - 2).containsKey(name)) {
+            //     return ScopeFunc.get(ScopeFunc.size() - 2).get(name);
+            // }
+            else if(ScopeFunc.size() > 2 && ScopeFunc.get(ScopeFunc.size() - 2).containsKey(name)) {
+                return ScopeFunc.get(ScopeFunc.size() - 2).get(name);
+            }
+            //如果当前作用域中没有，则返回全局变量
+            else {
+                return ScopeFunc.get(0).get(name);
+            }
+            */
+            
         }
         else if(cmd.equals("add")) {
             Float res = getInput().getNumber() + getInput().getNumber();
@@ -219,37 +218,13 @@ public class Interpreter {
             return tmp;
         }
         else if(cmd.equals("sub")) {
-            Float A = getInput().getNumber();
-            Float B = getInput().getNumber();
-            Float res = A - B;
-
-            //Debug
-            //System.out.println(A + " - " + B);
+            Float res = getInput().getNumber() - getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("mul")) {
-            Float A = getInput().getNumber();
-            Float B = getInput().getNumber();
-            Float res = A * B;
-
-            //Debug
-            // System.out.println("/n");
-            // System.out.println(A + " * " + B + " = " + res);
-            // //print the Scope 
-            // String ScopeString = "";
-            // for(int i = 0; i < Scope.size(); i++) {
-            //     ScopeString += Scope.get(i) + " ";
-            // }
-            // System.out.println("Scope: " + ScopeString);
-            // //print the LScope
-            // String LScopeString = "";
-            // for(int i = 0; i < LScope.size(); i++) {
-            //     LScopeString += LScope.get(i) + " ";
-            // }
-            // System.out.println("LScope: " + LScopeString);
-
+            Float res = getInput().getNumber() * getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
@@ -342,12 +317,18 @@ public class Interpreter {
                 getLine(cmdNextLine);
                 tmp = getInput();
             }
-            if(Scope.size() != 0) {
-                ScopeFunc.get(Scope.get(Scope.size() - 1)).put(name, tmp);
+            // tmp.ScopeIndex.clear();
+            // DeepCopyInt(Scope, tmp.ScopeIndex);
+            //如果当前是在某函数中进行Make，应该进行Make到当前作用域中
+            /*
+            if(ScopeFunc.size() > 1) {
+                ScopeFunc.get(ScopeFunc.size() - 1).put(name, tmp);
             }
             else {
                 ScopeFunc.get(0).put(name, tmp);
             }
+            */
+            ScopeFunc.get(Scope.get(Scope.size() - 1)).put(name, tmp);
             return tmp;
         }
         else if(cmd.equals("erase")) {
@@ -484,16 +465,6 @@ public class Interpreter {
             //执行return后的第一条命令，直接将命令索引置到最后，实现从命令中返回
             Word tmp = getInput();
             ArgsNumber = cmdList.size();
-
-            //Debug
-            //print the cmdList in one line
-            // for(int i = 0; i < cmdList.size(); i++) {
-            //     System.out.print(cmdList.get(i) + " ");
-            // }
-            // tmp.print();
-            // if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey("x")) {
-            //     ScopeFunc.get(Scope.get(Scope.size() - 1)).get("x").print();
-            // }
             return tmp;
         }
         else if(cmd.equals("export")) {
@@ -509,12 +480,24 @@ public class Interpreter {
         else if(IsDefinedOperate(cmd)) {
             Word Func = getDefinedFunc(cmd);
 
+            //Debug
+            System.out.println("runing function: " + cmd + " " + Func.getString());
+            //Print Scope
+            System.out.println("\n\n");
+            for(int i = 0; i < ScopeFunc.size(); i++) {
+                System.out.println("Scope " + i + ": ");
+                // for(String key : ScopeFunc.get(i).keySet()) {
+                //     System.out.println(key + " " + ScopeFunc.get(i).get(key).getString());
+                // }
+            }
+            System.out.println("\n\n");
+
             //从String中还原函数的参数列表和执行命令列表
             ArrayList<String> FuncStringsList = SplitLineBySpace(Func.getString());
-            
-            //set the scope
-            HashMap<String, Word> NewScope = new HashMap<>();
-
+            //Debug
+            // for(int i = 0; i < FuncStringsList.size(); i++) {
+            //     System.out.println(FuncStringsList.get(i));
+            // }
             int index = 0;
             ArrayList<String> ArgList = new ArrayList<>();
             //获取参数表
@@ -528,7 +511,6 @@ public class Interpreter {
                 }
                 ArgList.add(FuncStringsList.get(index));
             }
-
             //打印参数表
             // for(int i = 0; i < Func.ArgList.size(); i++) {
             //     System.out.println(ArgList.get(i));
@@ -556,43 +538,49 @@ public class Interpreter {
             }
             //System.out.println(OpString);
 
+            //set the scope
+            HashMap<String, Word> NewScope = new HashMap<>();
+
             //参数赋值
+            System.out.println("The arguments are: ");
             for(int i = 0; i < ArgList.size(); i++) {
                 Word argment = getInput();
                 NewScope.put(ArgList.get(i), argment);
-                //ScopeFunc.get(Scope.get(Scope.size() - 1)).put(ArgList.get(i), argment);
+                //Debug
+                System.out.println(ArgList.get(i) + " " + argment.getString());
             }
-            
-            //嵌套定义的Scope被改变
-            ArrayList<Integer> TmpScope = new ArrayList<>();
-            DeepCopyInt(Scope, TmpScope);
             ScopeFunc.add(NewScope);
-            Scope.add(ScopeFunc.size() - 1);
-
-            ArrayList<Integer> tmpLScope = new ArrayList<>();
-            DeepCopyInt(LScope, tmpLScope);
-            LScope.clear();
-            DeepCopyInt(Func.ScopeIndex, LScope);
-            LScope.remove(0);
-
+            
+            ArrayList<Integer> TmpScope = new ArrayList<>();
             ArrayList<String> TmpcmdList = new ArrayList<String>();
             DeepCopy(cmdList, TmpcmdList);
+            DeepCopyInt(Scope, TmpScope);
+
             int TmpArgsNumber = ArgsNumber;
-            
             getLine(OpString);
-            
+            //print the cmdList
+            // for(int i = 0; i < cmdList.size(); i++) {
+            //     System.out.println(cmdList.get(i));
+            // }
+            Func.ScopeIndex.add(ScopeFunc.size() - 1);
+            Scope.clear();
+            DeepCopyInt(Func.ScopeIndex, Scope);
+            // Scope.clear();
+            // DeepCopyInt(Func.ScopeIndex, Scope);
+
             Word tmp = new Word();
             while(ArgsNumber < cmdList.size()) {
                 tmp = getInput();
             }
             
+            //函数执行完毕，清除作用域
+            //ScopeFunc.remove(ScopeFunc.size() - 1);
             //函数执行完毕，返回闭包
             tmp.ScopeIndex.clear();
             DeepCopyInt(Scope, tmp.ScopeIndex);
-
+            //tmp.ScopeIndex.add(ScopeFunc.size() - 1);
             cmdList = RestoreFromArrayList(TmpcmdList);
             Scope = RestoreFromArrayListInt(TmpScope);
-            LScope = RestoreFromArrayListInt(tmpLScope);
             ArgsNumber = TmpArgsNumber;
             return tmp;
         }
@@ -639,51 +627,43 @@ public class Interpreter {
 
     //闭包处理时需要修改
     public Boolean IsDefinedOperate(String func) {
-
-        if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey(func)) {
-            return true;
-        }
-        else {
-            for(int i = LScope.size() - 1; i >= 0; i--) {
-                if(ScopeFunc.get(LScope.get(i)).containsKey(func)) {
-                    return true;
-                }
-            }
-            for(int i = Scope.size() - 1; i >= 0; i--) {
-                if(ScopeFunc.get(Scope.get(i)).containsKey(func)) {
-                    return true;
-                }
-            }
-            if(ScopeFunc.get(0).containsKey(func)) {
+        for(int i = 0; i < Scope.size(); i++) {
+            if(ScopeFunc.get(Scope.get(i)).containsKey(func)) {
                 return true;
             }
         }
         return false;
+        // if(ScopeFunc.size() > 1 && ScopeFunc.get(ScopeFunc.size() - 1).containsKey(func)) {
+        //     return true;
+        // }
+        // else if(ScopeFunc.get(0).containsKey(func)) {
+        //     return true;
+        // }
+        // else {
+        //     return false;
+        // }
     }
 
     public Word getDefinedFunc(String func) {
-
-        if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey(func)) {
-            return ScopeFunc.get(Scope.get(Scope.size() - 1)).get(func);
-        }
-        else {
-            for(int i = LScope.size() - 1; i >= 0; i--) {
-                if(ScopeFunc.get(LScope.get(i)).containsKey(func)) {
-                    return ScopeFunc.get(LScope.get(i)).get(func);
-                }
-            }
-            for(int i = Scope.size() - 1; i >= 0; i--) {
-                if(ScopeFunc.get(Scope.get(i)).containsKey(func)) {
-                    return ScopeFunc.get(Scope.get(i)).get(func);
-                }
-            }
-            if(ScopeFunc.get(0).containsKey(func)) {
-                return ScopeFunc.get(0).get(func);
+        for(int i = 0; i < Scope.size(); i++) {
+            if(ScopeFunc.get(Scope.get(i)).containsKey(func)) {
+                return ScopeFunc.get(Scope.get(i)).get(func);
             }
         }
         Word tmp = new Word();
         tmp.assign("", 4);
         return tmp; 
+        // if(ScopeFunc.size() > 1 && ScopeFunc.get(ScopeFunc.size() - 1).containsKey(func)) {
+        //     return ScopeFunc.get(ScopeFunc.size() - 1).get(func);
+        // }
+        // else if(ScopeFunc.get(0).containsKey(func)) {
+        //     return ScopeFunc.get(0).get(func);
+        // }
+        // else {
+        //     Word tmp = new Word();
+        //     tmp.assign("", 4);
+        //     return tmp;
+        // }
     }
 
     public void DeepCopy(ArrayList<String> src, ArrayList<String> dest) {

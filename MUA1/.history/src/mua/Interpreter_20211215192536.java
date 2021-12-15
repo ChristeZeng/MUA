@@ -219,37 +219,13 @@ public class Interpreter {
             return tmp;
         }
         else if(cmd.equals("sub")) {
-            Float A = getInput().getNumber();
-            Float B = getInput().getNumber();
-            Float res = A - B;
-
-            //Debug
-            //System.out.println(A + " - " + B);
+            Float res = getInput().getNumber() - getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
         }
         else if(cmd.equals("mul")) {
-            Float A = getInput().getNumber();
-            Float B = getInput().getNumber();
-            Float res = A * B;
-
-            //Debug
-            // System.out.println("/n");
-            // System.out.println(A + " * " + B + " = " + res);
-            // //print the Scope 
-            // String ScopeString = "";
-            // for(int i = 0; i < Scope.size(); i++) {
-            //     ScopeString += Scope.get(i) + " ";
-            // }
-            // System.out.println("Scope: " + ScopeString);
-            // //print the LScope
-            // String LScopeString = "";
-            // for(int i = 0; i < LScope.size(); i++) {
-            //     LScopeString += LScope.get(i) + " ";
-            // }
-            // System.out.println("LScope: " + LScopeString);
-
+            Float res = getInput().getNumber() * getInput().getNumber();
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
@@ -342,12 +318,18 @@ public class Interpreter {
                 getLine(cmdNextLine);
                 tmp = getInput();
             }
-            if(Scope.size() != 0) {
-                ScopeFunc.get(Scope.get(Scope.size() - 1)).put(name, tmp);
+            // tmp.ScopeIndex.clear();
+            // DeepCopyInt(Scope, tmp.ScopeIndex);
+            //如果当前是在某函数中进行Make，应该进行Make到当前作用域中
+            /*
+            if(ScopeFunc.size() > 1) {
+                ScopeFunc.get(ScopeFunc.size() - 1).put(name, tmp);
             }
             else {
                 ScopeFunc.get(0).put(name, tmp);
             }
+            */
+            ScopeFunc.get(Scope.get(Scope.size() - 1)).put(name, tmp);
             return tmp;
         }
         else if(cmd.equals("erase")) {
@@ -484,16 +466,6 @@ public class Interpreter {
             //执行return后的第一条命令，直接将命令索引置到最后，实现从命令中返回
             Word tmp = getInput();
             ArgsNumber = cmdList.size();
-
-            //Debug
-            //print the cmdList in one line
-            // for(int i = 0; i < cmdList.size(); i++) {
-            //     System.out.print(cmdList.get(i) + " ");
-            // }
-            // tmp.print();
-            // if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey("x")) {
-            //     ScopeFunc.get(Scope.get(Scope.size() - 1)).get("x").print();
-            // }
             return tmp;
         }
         else if(cmd.equals("export")) {
@@ -512,8 +484,13 @@ public class Interpreter {
             //从String中还原函数的参数列表和执行命令列表
             ArrayList<String> FuncStringsList = SplitLineBySpace(Func.getString());
             
+            ArrayList<Integer> TmpScope = new ArrayList<>();
+            DeepCopyInt(Scope, TmpScope);
             //set the scope
             HashMap<String, Word> NewScope = new HashMap<>();
+            ScopeFunc.add(NewScope);
+            //嵌套定义的Scope被改变
+            Scope.add(ScopeFunc.size() - 1);
 
             int index = 0;
             ArrayList<String> ArgList = new ArrayList<>();
@@ -559,21 +536,18 @@ public class Interpreter {
             //参数赋值
             for(int i = 0; i < ArgList.size(); i++) {
                 Word argment = getInput();
-                NewScope.put(ArgList.get(i), argment);
-                //ScopeFunc.get(Scope.get(Scope.size() - 1)).put(ArgList.get(i), argment);
+                //NewScope.put(ArgList.get(i), argment);
+                ScopeFunc.get(Scope.get(Scope.size() - 1)).put(ArgList.get(i), argment);
+                if(argment.getType() == 3) {
+                    argment.ScopeIndex.clear();
+                    DeepCopyInt(Scope, argment.ScopeIndex);
+                }
             }
             
-            //嵌套定义的Scope被改变
-            ArrayList<Integer> TmpScope = new ArrayList<>();
-            DeepCopyInt(Scope, TmpScope);
-            ScopeFunc.add(NewScope);
-            Scope.add(ScopeFunc.size() - 1);
-
             ArrayList<Integer> tmpLScope = new ArrayList<>();
             DeepCopyInt(LScope, tmpLScope);
             LScope.clear();
             DeepCopyInt(Func.ScopeIndex, LScope);
-            LScope.remove(0);
 
             ArrayList<String> TmpcmdList = new ArrayList<String>();
             DeepCopy(cmdList, TmpcmdList);
@@ -654,9 +628,6 @@ public class Interpreter {
                     return true;
                 }
             }
-            if(ScopeFunc.get(0).containsKey(func)) {
-                return true;
-            }
         }
         return false;
     }
@@ -676,9 +647,6 @@ public class Interpreter {
                 if(ScopeFunc.get(Scope.get(i)).containsKey(func)) {
                     return ScopeFunc.get(Scope.get(i)).get(func);
                 }
-            }
-            if(ScopeFunc.get(0).containsKey(func)) {
-                return ScopeFunc.get(0).get(func);
             }
         }
         Word tmp = new Word();

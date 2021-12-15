@@ -556,6 +556,12 @@ public class Interpreter {
             }
             //System.out.println(OpString);
 
+            ArrayList<Integer> tmpLScope = new ArrayList<>();
+            DeepCopyInt(LScope, tmpLScope);
+            LScope.clear();
+            DeepCopyInt(Func.ScopeIndex, LScope);
+            LScope.remove(0);
+            
             //参数赋值
             for(int i = 0; i < ArgList.size(); i++) {
                 Word argment = getInput();
@@ -569,11 +575,7 @@ public class Interpreter {
             ScopeFunc.add(NewScope);
             Scope.add(ScopeFunc.size() - 1);
 
-            ArrayList<Integer> tmpLScope = new ArrayList<>();
-            DeepCopyInt(LScope, tmpLScope);
-            LScope.clear();
-            DeepCopyInt(Func.ScopeIndex, LScope);
-            LScope.remove(0);
+            
 
             ArrayList<String> TmpcmdList = new ArrayList<String>();
             DeepCopy(cmdList, TmpcmdList);

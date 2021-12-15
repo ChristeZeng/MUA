@@ -224,7 +224,7 @@ public class Interpreter {
             Float res = A - B;
 
             //Debug
-            //System.out.println(A + " - " + B);
+            System.out.println(A + " - " + B);
             Word tmp = new Word();
             tmp.assign(Float.toString(res), 1);
             return tmp;
@@ -342,6 +342,17 @@ public class Interpreter {
                 getLine(cmdNextLine);
                 tmp = getInput();
             }
+            // tmp.ScopeIndex.clear();
+            // DeepCopyInt(Scope, tmp.ScopeIndex);
+            //如果当前是在某函数中进行Make，应该进行Make到当前作用域中
+            /*
+            if(ScopeFunc.size() > 1) {
+                ScopeFunc.get(ScopeFunc.size() - 1).put(name, tmp);
+            }
+            else {
+                ScopeFunc.get(0).put(name, tmp);
+            }
+            */
             if(Scope.size() != 0) {
                 ScopeFunc.get(Scope.get(Scope.size() - 1)).put(name, tmp);
             }
@@ -487,13 +498,13 @@ public class Interpreter {
 
             //Debug
             //print the cmdList in one line
-            // for(int i = 0; i < cmdList.size(); i++) {
-            //     System.out.print(cmdList.get(i) + " ");
-            // }
-            // tmp.print();
-            // if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey("x")) {
-            //     ScopeFunc.get(Scope.get(Scope.size() - 1)).get("x").print();
-            // }
+            for(int i = 0; i < cmdList.size(); i++) {
+                System.out.print(cmdList.get(i) + " ");
+            }
+            tmp.print();
+            if(ScopeFunc.get(Scope.get(Scope.size() - 1)).containsKey("x")) {
+                ScopeFunc.get(Scope.get(Scope.size() - 1)).get("x").print();
+            }
             return tmp;
         }
         else if(cmd.equals("export")) {
@@ -512,8 +523,12 @@ public class Interpreter {
             //从String中还原函数的参数列表和执行命令列表
             ArrayList<String> FuncStringsList = SplitLineBySpace(Func.getString());
             
+            ArrayList<Integer> TmpScope = new ArrayList<>();
+            DeepCopyInt(Scope, TmpScope);
             //set the scope
             HashMap<String, Word> NewScope = new HashMap<>();
+            ScopeFunc.add(NewScope);
+            
 
             int index = 0;
             ArrayList<String> ArgList = new ArrayList<>();
@@ -559,16 +574,13 @@ public class Interpreter {
             //参数赋值
             for(int i = 0; i < ArgList.size(); i++) {
                 Word argment = getInput();
-                NewScope.put(ArgList.get(i), argment);
-                //ScopeFunc.get(Scope.get(Scope.size() - 1)).put(ArgList.get(i), argment);
+                //NewScope.put(ArgList.get(i), argment);
+                ScopeFunc.get(Scope.get(Scope.size() - 1)).put(ArgList.get(i), argment);
             }
             
             //嵌套定义的Scope被改变
-            ArrayList<Integer> TmpScope = new ArrayList<>();
-            DeepCopyInt(Scope, TmpScope);
-            ScopeFunc.add(NewScope);
             Scope.add(ScopeFunc.size() - 1);
-
+            
             ArrayList<Integer> tmpLScope = new ArrayList<>();
             DeepCopyInt(LScope, tmpLScope);
             LScope.clear();
