@@ -4,6 +4,7 @@ basic3: PASS
 basic4: PASS
 fact1: PASS
 fact2: PASS
+fact3: PASS
 logic1: PASS
 logic2: PASS
 logic3: PASS
@@ -11,4 +12,4 @@ logic4: PASS
 church numeral1: PASS
 church numeral2: PASS
 church numeral3: PASS
-27
+30
